@@ -1,0 +1,1 @@
+alter system alter configuration ('xsengine.ini','SYSTEM')set ('debugger','enabled')='true' with reconfigure;
