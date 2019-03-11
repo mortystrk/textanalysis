@@ -1,5 +1,6 @@
 var parser = $.import("textanalysis.content.src.lib", "linkParsing");
 var extractor = $.import("textanalysis.content.src.lib", "extractTextByLinks");
+var regexp = $.import("textanalysis.content.src.lib", "clearTextByRegExp");
 
 var destination_package = "textanalysis.content.src.artifacts.destinations";
 var destination_name = "blogs";
@@ -14,21 +15,16 @@ try {
        var xmlString = response.body.asString();
        
        var links = parser.getLinkArray(xmlString);
+
+       var allBlogs = extractor.extractTextByLinks(links);
        
-       var link = links[1];
-       
-       req = new $.web.WebRequest($.net.http.GET, "");
-       client.setTrustStore("Blogs");
-       client.request(req, link);
-       response = client.getResponse();
-       
-       var body = response.body.asString();
-       var clearBody = extractor.cutBodyText(body);
-       var clearText = extractor.clearText(clearBody);
-       
+       var commonTags = ['p', 'h2', 'h3', 'strong', 'em', 'code', 'li', 'ul', 'br', 'b'];
+       var compositeTags = ['img', 'a', 'p', 'span'];
+       var singleTags = ['br'];
+       var clearText = regexp.fullCleaning(commonTags, compositeTags, singleTags, allBlogs[2]);
+
     $.response.contentType = "application/json";
        $.response.setBody(clearText);
-       //$.response.setBody(link);
        $.response.status = $.net.http.OK;
 } catch (e) {
        $.response.contentType = "text/plain";

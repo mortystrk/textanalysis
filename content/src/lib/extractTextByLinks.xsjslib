@@ -1,95 +1,8 @@
-// not use for <a> or for <img> tags
-function sliceByTag (tag, text) {
-    var startTag = '<' + tag + '>';
-    var endTag = '</' + tag + '>';
-    var clearedText = text;
-    
-    clearedText = clearedText.replace(new RegExp(startTag, 'g'), ' ');
-    clearedText = clearedText.replace(new RegExp(endTag, 'g'), ' ');
-    /*var sliceStart, sliceEnd;
-    
-    while(clearedText.search(startTag) !== -1) {
-        
-        sliceStart = clearedText.search(startTag);
-        sliceEnd = sliceStart + startTag.length;
-        
-        clearedText = clearedText.slice(sliceStart, sliceEnd);
-        
-        sliceStart = clearedText.search(endTag);
-        sliceEnd = sliceStart + endTag.length;
-        
-        clearedText = clearedText.slice(sliceStart, sliceEnd);
-    }*/
-    
-    return clearedText;
-}
-
-function deleteATag (text) {
-    var startTag = '<a';
-    var endStartTag = '>';
-    var endTag = '</a>';
-    var deleteStart, deleteEnd;
-    var clearedText = text;
-    var tempStr;
-    
-    while (clearedText.search(startTag) !== -1) {
-        deleteStart = clearedText.search(startTag);
-        deleteEnd = clearedText.search(endStartTag) + 1;
-        
-        clearedText = clearedText.slice(deleteStart, deleteEnd);
-        
-        deleteStart = clearedText.search(endTag);
-        deleteEnd = endTag.length;
-        
-        tempStr = clearedText.slice(deleteStart, deleteEnd);
-        clearedText = clearedText.replace(tempStr, ' ');
-    }
-    
-    return clearedText;
-}
-
-function deleteImgTag (text) {
-    var startTag = '<img';
-    var endTag = '/>';
-    var deleteStart, deleteEnd;
-    var clearedText = text;
-    var tempStr;
-    
-    while (clearedText.search(startTag) !== -1) {
-        deleteStart = clearedText.search(startTag);
-        deleteEnd = clearedText.search(endTag) + endTag.length;
-        
-        tempStr = clearedText.slice(deleteStart, deleteEnd);
-        clearedText = clearedText.replace(tempStr, ' ');
-    }
-    
-    return clearedText;
-}
-
-function deletePreTag (text) {
-    var startTag = '<pre';
-    var endTag = '</pre>';
-    var deleteStart, deleteEnd;
-    var clearedText = text;
-    var tempStr;
-    
-    while (clearedText.search(startTag) !== -1) {
-        deleteStart = clearedText.search(startTag);
-        deleteEnd = clearedText.search(endTag) + endTag.length;
-        
-        tempStr = clearedText.slice(deleteStart, deleteEnd);
-        clearedText = clearedText.replace(tempStr, ' ');
-    }
-    
-    return clearedText;
-}
-
-
-function cutBodyText (text) {
+function cutBodyText (messyBody) {
     var startTag = '<div class="dm-contentDetail__body-content">';
     var endTag = '</div>';
     var bodyText;
-    var tempStr = text;
+    var tempStr = messyBody;
     var sliceStart, sliceEnd;
     
     sliceStart = tempStr.search(startTag) + startTag.length;
@@ -104,29 +17,32 @@ function cutBodyText (text) {
     return bodyText;
 }
 
-function clearText (text) {
-    var clearedText = text;
+function getBodyByLink (link) {
+    var client = new $.net.http.Client();
+    var req = new $.web.WebRequest($.net.http.GET, "");
     
-    //clearedText = deletePreTag(clearedText);
-    clearedText = deleteImgTag(clearedText);
-    //clearedText = deleteATag(clearedText);
-    clearedText = sliceByTag('p', clearedText);
-    clearedText = sliceByTag('li', clearedText);
-    clearedText = sliceByTag('ul', clearedText);
-    clearedText = sliceByTag('strong', clearedText);
-    clearedText = clearedText.replace(/\s+/g, " ");
-    clearedText = deleteATag(clearedText);
+    client.setTrustStore("Blogs");
+    client.request(req, link);
     
-    //clearedText = clearedText.normalize('NFC');
+    var response = client.getResponse();
+    var body = response.body.asString();
     
-    return clearedText;
+    return body;
 }
 
-/*function getTextByLinks (links) {
+function extractTextByLinks (links) {
+    var body;
+    var text = [];
     
+    for (var i = 0; i < links.length; i++) {
+        body = getBodyByLink(links[i]);
+        text.push(cutBodyText(body));
+    }
+    
+    return text;
 }
 
 
-function extractText (links) {
-    
-}*/
+
+
+
