@@ -21,7 +21,7 @@ function getBodyByLink (link) {
     var client = new $.net.http.Client();
     var req = new $.web.WebRequest($.net.http.GET, "");
     
-    client.setTrustStore("Blogs");
+    client.setTrustStore("SecureBlogs");
     client.request(req, link);
     
     var response = client.getResponse();
@@ -41,8 +41,3 @@ function extractTextByLinks (links) {
     
     return text;
 }
-
-
-
-
-

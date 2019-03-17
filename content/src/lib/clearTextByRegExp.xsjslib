@@ -38,6 +38,19 @@ function clearTextFromSingleTag (tag, text) {
     return clearedText;
 }
 
+function decodeHtmlCharCodes(str) { 
+  return str.replace(/(&#(\d+);)/g, function(match, capture, charCode) {
+    return String.fromCharCode(charCode);
+  });
+}
+
+function fixSingleQuoteError (text) {
+    var clearedText = text;
+    clearedText = clearedText.replace(/’/g, "\'");
+    
+    return clearedText;
+}
+
 function fullCleaning (commonTags, compositeTags, singleTags, text) {
     var clearedText = text;
     
@@ -54,6 +67,8 @@ function fullCleaning (commonTags, compositeTags, singleTags, text) {
     }
     
     clearedText = clearTextFromSpecialChar(clearedText);
+    
+    clearedText = fixSingleQuoteError(clearedText);
     
     clearedText = clearedText.replace(/\s+/g, " ");
     
