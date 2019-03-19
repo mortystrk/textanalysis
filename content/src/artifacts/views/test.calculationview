@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="test" applyPrivilegeType="ANALYTIC_PRIVILEGE" dataCategory="CUBE" schemaVersion="2.3" defaultClient="$$client$$" visibility="reportingEnabled" outputViewType="Aggregation" calculationScenarioType="TREE_BASED" enforceSqlExecution="true">
+<descriptions defaultDescription="tes"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="textanalysis.content.src.artifacts.views::blogsView" type="DATA_BASE_VIEW">
+    <viewAttributes allViewAttributes="true"/>
+    <columnObject schemaName="TA_SCHEMA" columnObjectName="textanalysis.content.src.artifacts.views::blogsView"/>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="TM_Blogs">
+    <viewAttributes>
+      <viewAttribute id="TM_TERM"/>
+      <viewAttribute id="TM_TERM_FREQUENCY"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="#textanalysis.content.src.artifacts.views::blogsView">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TM_TERM" source="TM_TERM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TM_TERM_FREQUENCY" source="TM_TERM_FREQUENCY"/>
+    </input>
+  </calculationView>
+</calculationViews>
+<logicalModel id="TM_Blogs">
+  <attributes>
+    <attribute id="TM_TERM" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TM_TERM"/>
+      <keyMapping columnObjectName="TM_Blogs" columnName="TM_TERM"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="TM_TERM_FREQUENCY" order="2" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="TM_TERM_FREQUENCY"/>
+      <measureMapping columnObjectName="TM_Blogs" columnName="TM_TERM_FREQUENCY"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+    <shape expanded="true" modelObjectName="TM_Blogs" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="83" y="236"/>
+      <rectangleSize height="30" width="140"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

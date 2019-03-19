@@ -9,7 +9,7 @@ function DBController(oConnection) {
 DBController.prototype.insert = function(aBlogs) {
     try {
         for (var i = 0; i < aBlogs.length; i++) {
-            this.oConnection.executeUpdate('INSERT INTO "SYSTEM"."BLOGS"(BLOGCONTENT) VALUES(?)', aBlogs[i]);
+            this.oConnection.executeUpdate('INSERT INTO "TA_SCHEMA"."textanalysis.content.src.artifacts.cds::BLOGS"(ID, CONTENT) VALUES("TA_SCHEMA"."textanalysis.content.src.artifacts.sequences::auto_increment".NEXTVAL, ?)', aBlogs[i]);
         }
         this.oConnection.commit();
         var message = 'Succesfully inserting';

@@ -1,0 +1,2 @@
+schema="TA_SCHEMA";
+query="SELECT ID, TM_TERM, TM_TERM_FREQUENCY FROM \"TA_SCHEMA\".\"$TM_MATRIX_textanalysis.content.src.artifacts.cds::BLOGS.blog_content_idx\"";
