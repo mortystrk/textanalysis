@@ -12,26 +12,19 @@ DBController.prototype.insert = function(aBlogs) {
             this.oConnection.executeUpdate('INSERT INTO "TA_SCHEMA"."textanalysis.content.src.artifacts.cds::BLOGS"(ID, CONTENT) VALUES("TA_SCHEMA"."textanalysis.content.src.artifacts.sequences::auto_increment".NEXTVAL, ?)', aBlogs[i]);
         }
         this.oConnection.commit();
-        var message = 'Succesfully inserting';
-        return message;
+        return 'Succesfully inserted';
     } catch (e) {
         return e.message;
-        
     }
-    
-    
-    
-	/*if (vTarget) {
-		if (aParameters) {
-			this.oConnection.executeUpdate("INSERT INTO " + vName + "(" + vTarget + ") " + vSource, aParameters);
-		} else {
-			this.oConnection.executeUpdate("INSERT INTO " + vName + "(" + vTarget + ") " + vSource);
-		}
-	} else {
-		if (aParameters) {
-			this.oConnection.executeUpdate("INSERT INTO " + vName + " " + vSource, aParameters);
-		} else {
-			this.oConnection.executeUpdate("INSERT INTO " + vName + " " + vSource);
-		}
-	}*/
 };
+    
+DBController.prototype.truncate = function(vTableName) {
+    try {
+        var query = 'TRUNCATE TABLE ' + vTableName;
+        this.oConnection.executeUpdate(query);
+        return "Successfully truncated";
+    } catch (e) {
+        return e.message;
+    }
+};
+
