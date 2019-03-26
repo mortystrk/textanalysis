@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="loadBlogs" applyPrivilegeType="ANALYTIC_PRIVILEGE" dataCategory="CUBE" schemaVersion="2.3" defaultClient="$$client$$" visibility="reportingEnabled" outputViewType="Aggregation" calculationScenarioType="TREE_BASED" enforceSqlExecution="false">
+<descriptions defaultDescription="loadBlogs"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="textanalysis.content.src.artifacts.views::blogsView" type="DATA_BASE_VIEW">
+    <viewAttributes allViewAttributes="true"/>
+    <columnObject schemaName="TA_SCHEMA" columnObjectName="textanalysis.content.src.artifacts.views::blogsView"/>
+  </DataSource>
+</dataSources>
+<calculationViews/>
+<logicalModel id="textanalysis.content.src.artifacts.views::blogsView">
+  <attributes>
+    <attribute id="TM_TERM" key="true" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TM_TERM"/>
+      <keyMapping schemaName="TA_SCHEMA" columnObjectName="textanalysis.content.src.artifacts.views::blogsView" columnName="TM_TERM"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="TM_TERM_FREQUENCY" order="2" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="TM_TERM_FREQUENCY"/>
+      <measureMapping schemaName="TA_SCHEMA" columnObjectName="textanalysis.content.src.artifacts.views::blogsView" columnName="TM_TERM_FREQUENCY"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
