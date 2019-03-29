@@ -89,6 +89,17 @@ function loadData () {
     }
 }
 
+function textMiningTableCheck () {
+    //var mainTimer = setTimeout(function runCheck () {
+        
+    //})
+    var response = controller.selectAndCountTM();
+    
+    $.response.contentType = "application/json";
+    $.response.setBody(JSON.stringify(response));
+    $.response.status = $.net.http.OK;
+}
+
 function truncateAllData (controller) {
     var message = '';
     
@@ -120,7 +131,7 @@ switch (func) {
         
         var message = "Successful loaded";
         $.response.contentType = "application/json";
-        $.response.setBody(JSON.stringify(message));
+        $.response.setBody(message);
         $.response.status = $.net.http.OK;
         
         break;
@@ -142,11 +153,17 @@ switch (func) {
         
         break;
         
+    case "count" :
+        
+        textMiningTableCheck();
+        
+        break;
+        
     default:
         var errorMessage = "Unsupported command";
         $.response.contentType = "application/json";
         $.response.setBody(JSON.stringify(errorMessage));
-        $.response.status = "404";
+        $.response.status = $.net.http.OK;
 }
 
 
