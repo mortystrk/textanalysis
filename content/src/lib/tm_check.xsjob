@@ -1,0 +1,5 @@
+{
+	"description": "My Job configuration",
+	"action": "textanalysis.content.src:texMiningCheckJob.xsjs::textMiningTableCheck",
+	"schedules": []
+}

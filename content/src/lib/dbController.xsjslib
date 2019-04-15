@@ -29,7 +29,7 @@ DBController.prototype.truncate = function (vTableName) {
 };
 
 DBController.prototype.selectAndCountTM = function () {
-    var query = 'SELECT ID FROM "TA_SCHEMA"."textanalysis.content.src.artifacts.cds::BLOGS"';
+    var query = 'SELECT TOP 5 ID FROM "TA_SCHEMA"."$TM_MATRIX_textanalysis.content.src.artifacts.cds::BLOGS.blog_content_idx"';
     try {
         var queryResult = this.oConnection.executeQuery(query);
         var idCount = queryResult.length;
@@ -37,5 +37,46 @@ DBController.prototype.selectAndCountTM = function () {
     } catch (e) {
         return e.message;
     }
+};
+
+DBController.prototype.selectJobIdByName = function (jobName) {
+    var query = 'SELECT ID FROM "_SYS_XS"."JOB_SCHEDULES" WHERE JOB_NAME = \'' + jobName + '\'';
+    try {
+        var queryResult = this.oConnection.executeQuery(query);
+        
+        var row = queryResult[0];
+        var id = row.ID;
+        var bigIntId = Number(ctypes.Int64(id));
+        
+        return bigIntId;
+    } catch (e) {
+        return e.message;
+    }
+};
+
+DBController.prototype.selectByColumnName = function () {
+    /*var columnsConditions = '';
+    
+    for (let i = 0; i < columns.length; i++) {
+        let checkLastColumn = i + 1;
+        if (checkLastColumn === columns.length) {
+            columnsConditions += columns[i];
+        } else {
+            columnsConditions += columns[i] + ', ';
+        }
+    }
+    
+    var query = 'SELECT TOP 100 ' + columnsConditions + ' FROM "TA_SCHEMA"."$TM_MATRIX_textanalysis.content.src.artifacts.cds::BLOGS.blog_content_idx"';*/
+    
+    try {
+        var query = 'SELECT "TM_TERM" AS word, SUM("TM_TERM_FREQUENCY") AS weight FROM "TA_SCHEMA"."$TM_MATRIX_textanalysis.content.src.artifacts.cds::BLOGS.blog_content_idx" GROUP BY TM_TERM HAVING SUM("TM_TERM_FREQUENCY") > 30 ORDER BY SUM("TM_TERM_FREQUENCY") DESC';
+        var queryResult = this.oConnection.executeQuery(query);
+        
+        return queryResult;
+    } catch (e) {
+        return e.message;
+    }
+    
+    
 };
 

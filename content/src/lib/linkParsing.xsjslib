@@ -48,15 +48,23 @@ function getLinkArray (xmlString) {
     return links;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
+function getLinkArray2 (bodies) {
+    const tag = 'div class="dm-contentListItem__title"';
+    var body;
+    var links = [];
+    var result;
+    var flag;
+    
+    for (let i = 0; i < bodies.length; i++) {
+        body = bodies[0];
+        
+        do {
+            result = getLink(body);
+            links.push(result.link);
+            body = result.cutString;
+            flag = body.search(tag);
+        } while (flag !== -1);
+    }
+    
+    return links;
+}
