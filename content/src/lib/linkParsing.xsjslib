@@ -56,7 +56,7 @@ function getLinkArray2 (bodies) {
     var flag;
     
     for (let i = 0; i < bodies.length; i++) {
-        body = bodies[0];
+        body = bodies[i];
         
         do {
             result = getLink(body);

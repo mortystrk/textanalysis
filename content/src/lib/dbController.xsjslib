@@ -69,7 +69,7 @@ DBController.prototype.selectByColumnName = function () {
     var query = 'SELECT TOP 100 ' + columnsConditions + ' FROM "TA_SCHEMA"."$TM_MATRIX_textanalysis.content.src.artifacts.cds::BLOGS.blog_content_idx"';*/
     
     try {
-        var query = 'SELECT "TM_TERM" AS word, SUM("TM_TERM_FREQUENCY") AS weight FROM "TA_SCHEMA"."$TM_MATRIX_textanalysis.content.src.artifacts.cds::BLOGS.blog_content_idx" GROUP BY TM_TERM HAVING SUM("TM_TERM_FREQUENCY") > 30 ORDER BY SUM("TM_TERM_FREQUENCY") DESC';
+        var query = 'SELECT "TM_TERM" AS word, SUM("TM_TERM_FREQUENCY") AS weight FROM "TA_SCHEMA"."$TM_MATRIX_textanalysis.content.src.artifacts.cds::BLOGS.blog_content_idx" GROUP BY TM_TERM HAVING SUM("TM_TERM_FREQUENCY") > 60 ORDER BY SUM("TM_TERM_FREQUENCY") DESC';
         var queryResult = this.oConnection.executeQuery(query);
         
         return queryResult;
