@@ -1,0 +1,32 @@
+PROCEDURE "TA_SCHEMA"."textanalysis.content.src.artifacts.procedures::BlogsInfoByTag"(
+		IN tag NVARCHAR(50),
+		OUT flag tinyint
+	)
+	LANGUAGE SQLSCRIPT
+AS
+BEGIN
+
+t_relevant_ids = 
+	SELECT TOP 15
+			TM."ID" AS "ID", 
+			TM."TM_TERM_FREQUENCY" AS "FREQUENCY"
+		FROM "TA_SCHEMA"."$TM_MATRIX_textanalysis.content.src.artifacts.cds::BLOGS.blog_content_idx" AS TM
+		WHERE TM."TM_TERM" = :tag
+		ORDER BY "FREQUENCY" DESC;
+		
+DELETE FROM "TA_SCHEMA"."textanalysis.content.src.artifacts.cds::ID_STORE";
+		
+INSERT INTO "TA_SCHEMA"."textanalysis.content.src.artifacts.cds::ID_STORE" 
+SELECT ID FROM :t_relevant_ids;
+
+DELETE FROM "TA_SCHEMA"."textanalysis.content.src.artifacts.cds::BLOGS_INFO";
+
+INSERT INTO "TA_SCHEMA"."textanalysis.content.src.artifacts.cds::BLOGS_INFO"
+SELECT TITLE, LINK, AUTHOR FROM "TA_SCHEMA"."textanalysis.content.src.artifacts.cds::BLOGS"
+WHERE ID IN (SELECT ID FROM "TA_SCHEMA"."textanalysis.content.src.artifacts.cds::ID_STORE");
+
+SELECT * FROM "TA_SCHEMA"."textanalysis.content.src.artifacts.cds::BLOGS_INFO";
+
+SELECT 1 INTO flag FROM DUMMY;
+
+END;

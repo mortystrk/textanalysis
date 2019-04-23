@@ -1,0 +1,8 @@
+namespace textanalysis.content.src.artifacts.cds;
+@Schema: 'TA_SCHEMA'
+@Catalog.tableType: #COLUMN
+   Entity BLOGS_INFO{
+       TITLE: String(300);
+       LINK: String(300);
+       AUTHOR: String(300);
+   };

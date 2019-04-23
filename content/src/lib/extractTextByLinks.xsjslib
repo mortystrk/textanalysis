@@ -17,8 +17,8 @@ function cutBodyText (messyBody) {
     return bodyText;
 }
 
-function getBodyByLink (link) {
-    var client = new $.net.http.Client();
+function getBodyByLink (link, client, extractor) {
+    //var client = new $.net.http.Client();
     var req = new $.web.WebRequest($.net.http.GET, "");
     
     client.setTrustStore("SecureBlogs");
@@ -27,17 +27,24 @@ function getBodyByLink (link) {
     var response = client.getResponse();
     var body = response.body.asString();
     
-    return body;
+    var author = extractor.extractAuthors(body);
+    var title = extractor.extractTitle(body);
+    
+    var blogInfo = { author: author, body: body, title: title };
+    
+    return blogInfo;
 }
 
-function extractTextByLinks (links) {
-    var body;
-    var text = [];
+function extractBlogsInfo (links, client, extractor) {
+    var blogInfo;
+    var blogsInfo = [];
     
     for (var i = 0; i < links.length; i++) {
-        body = getBodyByLink(links[i]);
-        text.push(cutBodyText(body));
+        blogInfo = getBodyByLink(links[i], client, extractor);
+        
+        var info = { title: blogInfo.title, text: cutBodyText(blogInfo.body), author: blogInfo.author, link: links[i] };
+        blogsInfo.push(info);
     }
     
-    return text;
+    return blogsInfo;
 }
