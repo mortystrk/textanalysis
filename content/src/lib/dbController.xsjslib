@@ -9,7 +9,19 @@ function DBController(oConnection) {
 DBController.prototype.insert = function (aBlogs) {
     try {
         for (var i = 0; i < aBlogs.length; i++) {
-            this.oConnection.executeUpdate('INSERT INTO "TA_SCHEMA"."textanalysis.content.src.artifacts.cds::BLOGS"(ID, CONTENT) VALUES("TA_SCHEMA"."textanalysis.content.src.artifacts.sequences::auto_increment".NEXTVAL, ?)', aBlogs[i]);
+            this.oConnection.executeUpdate('INSERT INTO "TA_SCHEMA"."textanalysis.content.src.artifacts.cds::BLOGS"(ID, CONTENT, TITLE, LINK, AUTHOR) VALUES("TA_SCHEMA"."textanalysis.content.src.artifacts.sequences::auto_increment".NEXTVAL, ?, ?, ?, ?)', aBlogs[i].text, aBlogs[i].title, aBlogs[i].link, aBlogs[i].author);
+        }
+        this.oConnection.commit();
+        return 'Succesfully inserted';
+    } catch (e) {
+        return e.message;
+    }
+};
+
+DBController.prototype.insertID = function (IDs) {
+    try {
+        for (var i = 0; i < IDs.length; i++) {
+            this.oConnection.executeUpdate('INSERT INTO "TA_SCHEMA"."textanalysis.content.src.artifacts.cds::ID_STORE"(ID) VALUES(?)', IDs[i]);
         }
         this.oConnection.commit();
         return 'Succesfully inserted';
@@ -54,29 +66,38 @@ DBController.prototype.selectJobIdByName = function (jobName) {
     }
 };
 
-DBController.prototype.selectByColumnName = function () {
-    /*var columnsConditions = '';
-    
-    for (let i = 0; i < columns.length; i++) {
-        let checkLastColumn = i + 1;
-        if (checkLastColumn === columns.length) {
-            columnsConditions += columns[i];
-        } else {
-            columnsConditions += columns[i] + ', ';
-        }
+DBController.prototype.testSelect = function (number) {
+    var query = 'SELECT CONTENT FROM "TA_SCHEMA"."textanalysis.content.src.artifacts.cds::BLOGS" WHERE ID = ' +  number;
+    try {
+        var queryResult = this.oConnection.executeQuery(query);
+        return queryResult;
+    } catch (e) {
+        return e.message;
     }
-    
-    var query = 'SELECT TOP 100 ' + columnsConditions + ' FROM "TA_SCHEMA"."$TM_MATRIX_textanalysis.content.src.artifacts.cds::BLOGS.blog_content_idx"';*/
+};
+
+DBController.prototype.selectByColumnName = function () {
     
     try {
-        var query = 'SELECT "TM_TERM" AS word, SUM("TM_TERM_FREQUENCY") AS weight FROM "TA_SCHEMA"."$TM_MATRIX_textanalysis.content.src.artifacts.cds::BLOGS.blog_content_idx" GROUP BY TM_TERM HAVING SUM("TM_TERM_FREQUENCY") > 60 ORDER BY SUM("TM_TERM_FREQUENCY") DESC';
+        var query = 'SELECT TOP 25 "TM_TERM" AS word, SUM("TM_TERM_FREQUENCY") AS weight FROM "TA_SCHEMA"."$TM_MATRIX_TM_IDX" WHERE TM_TERM_TYPE = \'PRODUCT\' OR TM_TERM_TYPE = \'ORGANIZATION/COMMERCIAL\' GROUP BY TM_TERM ORDER BY SUM("TM_TERM_FREQUENCY") DESC';
         var queryResult = this.oConnection.executeQuery(query);
         
         return queryResult;
     } catch (e) {
         return e.message;
     }
-    
-    
 };
+
+DBController.prototype.loadBlogsInfo = function (tag) {
+    var blogsInfoByTag = this.oConnection.loadProcedure("TA_SCHEMA", "textanalysis.content.src.artifacts.procedures::BlogsInfoByTag");
+    var flag = null;
+    
+    flag = blogsInfoByTag(tag, null);
+    
+    return flag.FLAG;
+};
+
+
+
+
 
