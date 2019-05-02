@@ -1,0 +1,9 @@
+description = "Connection to auto Onliner";
+host = "auto.onliner.by";
+port = 443;
+proxyType = none;
+authType = none;
+useSSL = true;
+sslAuth = anonymous;
+sslHostCheck = false;
+timeout = 30000;
