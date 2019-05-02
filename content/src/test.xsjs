@@ -4,6 +4,8 @@ var regexp = $.import("textanalysis.content.src.lib", "clearTextByRegExp");
 var loader = $.import("textanalysis.content.src.lib", "loadBlogs");
 var dbController = $.import("textanalysis.content.src.lib", "dbController");
 var extractorBlogInfo =  $.import("textanalysis.content.src.lib", "ExtractingBlogInfo");
+var converter = $.import("textanalysis.content.src.lib", "htmlToJson");
+var onlinerLoader = $.import("textanalysis.content.src.lib", "loadOnlinerBlogs");
 
 var destinationPackage = "textanalysis.content.src.artifacts.destinations";
 var destinationName = "blogs";
@@ -104,6 +106,18 @@ function updateData () {
     $.response.status = $.net.http.OK;
 }
 
+function fetchPeopleOnlinerData() {
+    var onlinerDestinationName = "peopleonliner";
+
+    var destination = $.net.http.readDestination(destinationPackage, onlinerDestinationName);
+    
+    var peopleOnlinerBody = onlinerLoader.loadBlogs("people", destination, client);
+    var links = onlinerLoader.cutLinksFromMainBlogPage(peopleOnlinerBody);
+    var blogs = onlinerLoader.extractOnlinerBlogs(links, client, destination);
+    var textOfAllBlogs = onlinerLoader.getOnlinerBlogsText(blogs);
+    return textOfAllBlogs;
+}
+
 var func = $.request.parameters.get('func');
 switch (func) {
     case "load" :
@@ -157,9 +171,12 @@ switch (func) {
         $.response.contentType = "text/html";
         $.response.setBody(output);*/
         
-        var errorMessage = "Unsupported command";
+        var onlinerPeopleBlogs = fetchPeopleOnlinerData();
+        var message = controller.insertOnlinerPeople(onlinerPeopleBlogs);
+        
+        //var errorMessage = "Unsupported command";
         $.response.contentType = "application/json";
-        $.response.setBody(JSON.stringify(controller.testSelect(5487)));
+        $.response.setBody(JSON.stringify(message));
         $.response.status = $.net.http.OK;
         
         break;
