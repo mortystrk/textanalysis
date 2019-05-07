@@ -6,6 +6,8 @@ var dbController = $.import("textanalysis.content.src.lib", "dbController");
 var extractorBlogInfo =  $.import("textanalysis.content.src.lib", "ExtractingBlogInfo");
 var converter = $.import("textanalysis.content.src.lib", "htmlToJson");
 var onlinerLoader = $.import("textanalysis.content.src.lib", "loadOnlinerBlogs");
+var appleLoader = $.import("textanalysis.content.src.lib", "LoadAppleBlogs");
+var blogsUpdateController = $.import("textanalysis.content.src.lib", "updateBlogs");
 
 var destinationPackage = "textanalysis.content.src.artifacts.destinations";
 var destinationName = "blogs";
@@ -171,10 +173,15 @@ switch (func) {
         $.response.contentType = "text/html";
         $.response.setBody(output);*/
         
-        var onlinerPeopleBlogs = fetchPeopleOnlinerData();
-        var message = controller.insertOnlinerPeople(onlinerPeopleBlogs);
+        //var onlinerPeopleBlogs = fetchPeopleOnlinerData();
+        //var message = controller.insertOnlinerPeople(onlinerPeopleBlogs);
         
         //var errorMessage = "Unsupported command";
+        //var link = blogsUpdateController.updateBlogs(controller, dest, "SAP");
+        var numberOfLoadingPages = 1;
+        var blogs = appleLoader.getAppleBlogs(client, numberOfLoadingPages);
+        var message = controller.insertAppleNews(blogs);
+        
         $.response.contentType = "application/json";
         $.response.setBody(JSON.stringify(message));
         $.response.status = $.net.http.OK;

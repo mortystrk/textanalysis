@@ -29,6 +29,18 @@ DBController.prototype.insertOnlinerPeople = function (aBlogs) {
         return e.message;
     }
 };
+
+DBController.prototype.insertAppleNews = function (aBlogs) {
+    try {
+        for (var i = 0; i < aBlogs.length; i++) {
+            this.oConnection.executeUpdate('INSERT INTO "TA_SCHEMA"."textanalysis.content.src.artifacts.cds::APPLE_NEWSROOM"(ID, CONTENT, CATEGORY) VALUES("TA_SCHEMA"."textanalysis.content.src.artifacts.sequences::auto_increment".NEXTVAL, ?, ?)', aBlogs[i], 'test category');
+        }
+        this.oConnection.commit();
+        return 'Succesfully inserted';
+    } catch (e) {
+        return e.message;
+    }
+};
     
 DBController.prototype.truncate = function (vTableName) {
     try {

@@ -40,7 +40,7 @@ function _prepareLinksFromNewsRoom (newsRooms) {
 function _cleaningText (messyText) {
     
     var regexp = /<div class="pagebody-copy">/g;
-    var cleanedText;
+    var cleanedText = '';
     
     for (var i = 0; i < messyText.length; i++) {
         
