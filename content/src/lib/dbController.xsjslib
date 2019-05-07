@@ -18,10 +18,10 @@ DBController.prototype.insert = function (aBlogs) {
     }
 };
 
-DBController.prototype.insertID = function (IDs) {
+DBController.prototype.insertOnlinerPeople = function (aBlogs) {
     try {
-        for (var i = 0; i < IDs.length; i++) {
-            this.oConnection.executeUpdate('INSERT INTO "TA_SCHEMA"."textanalysis.content.src.artifacts.cds::ID_STORE"(ID) VALUES(?)', IDs[i]);
+        for (var i = 0; i < aBlogs.length; i++) {
+            this.oConnection.executeUpdate('INSERT INTO "TA_SCHEMA"."textanalysis.content.src.artifacts.cds::ONLINER_PEOPLE_BLOGS"(ID, CONTENT) VALUES("TA_SCHEMA"."textanalysis.content.src.artifacts.sequences::auto_increment".NEXTVAL, ?)', aBlogs[i]);
         }
         this.oConnection.commit();
         return 'Succesfully inserted';
@@ -51,31 +51,6 @@ DBController.prototype.selectAndCountTM = function () {
     }
 };
 
-DBController.prototype.selectJobIdByName = function (jobName) {
-    var query = 'SELECT ID FROM "_SYS_XS"."JOB_SCHEDULES" WHERE JOB_NAME = \'' + jobName + '\'';
-    try {
-        var queryResult = this.oConnection.executeQuery(query);
-        
-        var row = queryResult[0];
-        var id = row.ID;
-        var bigIntId = Number(ctypes.Int64(id));
-        
-        return bigIntId;
-    } catch (e) {
-        return e.message;
-    }
-};
-
-DBController.prototype.testSelect = function (number) {
-    var query = 'SELECT CONTENT FROM "TA_SCHEMA"."textanalysis.content.src.artifacts.cds::BLOGS" WHERE ID = ' +  number;
-    try {
-        var queryResult = this.oConnection.executeQuery(query);
-        return queryResult;
-    } catch (e) {
-        return e.message;
-    }
-};
-
 DBController.prototype.selectByColumnName = function () {
     
     try {
@@ -88,13 +63,16 @@ DBController.prototype.selectByColumnName = function () {
     }
 };
 
-DBController.prototype.loadBlogsInfo = function (tag) {
-    var blogsInfoByTag = this.oConnection.loadProcedure("TA_SCHEMA", "textanalysis.content.src.artifacts.procedures::BlogsInfoByTag");
-    var flag = null;
+DBController.prototype.selectLinkForUpperBlog = function (tableName) {
     
-    flag = blogsInfoByTag(tag, null);
-    
-    return flag.FLAG;
+    try {
+        var query = 'SELECT TOP 1 "LINK" FROM "TA_SCHEMA".' + '"' + tableName + '"';
+        var queryResult = this.oConnection.executeQuery(query);
+        
+        return queryResult[0];
+    } catch (e) {
+        return e.message;
+    }
 };
 
 
