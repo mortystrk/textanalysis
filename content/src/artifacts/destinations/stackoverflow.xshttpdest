@@ -1,0 +1,9 @@
+description = "Connection to Stackoverflow blogs";
+host = "stackoverflow.blog";
+port = 443;
+proxyType = none;
+authType = none;
+useSSL = true;
+sslAuth = anonymous;
+sslHostCheck = false;
+timeout = 30000;

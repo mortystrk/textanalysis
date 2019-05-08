@@ -7,6 +7,7 @@ var extractorBlogInfo =  $.import("textanalysis.content.src.lib", "ExtractingBlo
 var converter = $.import("textanalysis.content.src.lib", "htmlToJson");
 var onlinerLoader = $.import("textanalysis.content.src.lib", "loadOnlinerBlogs");
 var appleLoader = $.import("textanalysis.content.src.lib", "LoadAppleBlogs");
+var stackoverflowLoader = $.import("textanalysis.content.src.lib", "LoadStackoverflowBlogs");
 var blogsUpdateController = $.import("textanalysis.content.src.lib", "updateBlogs");
 
 var destinationPackage = "textanalysis.content.src.artifacts.destinations";
@@ -155,6 +156,18 @@ switch (func) {
         
         break;
         
+    case "loadAppleBlogs" :
+        
+        var numberOfLoadingPages = 1;
+        var blogs = appleLoader.getAppleBlogs(client, numberOfLoadingPages);
+        var message = controller.insertAppleNews(blogs);
+        
+        $.response.contentType = "application/json";
+        $.response.setBody(JSON.stringify(message));
+        $.response.status = $.net.http.OK;
+        
+        break;
+        
     default:
     
         //truncateAllData(controller);
@@ -178,12 +191,16 @@ switch (func) {
         
         //var errorMessage = "Unsupported command";
         //var link = blogsUpdateController.updateBlogs(controller, dest, "SAP");
-        var numberOfLoadingPages = 1;
-        var blogs = appleLoader.getAppleBlogs(client, numberOfLoadingPages);
-        var message = controller.insertAppleNews(blogs);
+        
+        var stackoverflowDestName = "stackoverflow";
+        var numberOfPages = 1;
+        
+        var stackoverflowDest = $.net.http.readDestination(destinationPackage, stackoverflowDestName);
+        
+        var blogs = stackoverflowLoader.loadingCompanyBlogs(client, stackoverflowDest, numberOfPages);
         
         $.response.contentType = "application/json";
-        $.response.setBody(JSON.stringify(message));
+        $.response.setBody(JSON.stringify("Ok"));
         $.response.status = $.net.http.OK;
         
         break;

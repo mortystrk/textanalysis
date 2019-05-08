@@ -1,7 +1,6 @@
 function loadBlogs (destination, numberOfPage, client) {
     var bodies = [];
     var request;
-    //var client = new $.net.http.Client();
     var response;
     
     if (numberOfPage < 1) {
