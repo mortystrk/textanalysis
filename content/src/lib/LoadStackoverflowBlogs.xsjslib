@@ -82,7 +82,7 @@ function _getBlogsByLinks (client, destination, links) {
     }
 }
 
-function loadingCompanyBlogs (client, destination, numberOfPages, cleaner) {
+function loadingBlogs (connectionInformation, numberOfPages, cleaner, blogsType) {
     
     var bodies = [];
     var request;
@@ -92,9 +92,9 @@ function loadingCompanyBlogs (client, destination, numberOfPages, cleaner) {
         return bodies;
     }
     
-    request = new $.web.WebRequest($.net.http.GET, "/company/");
-    client.request(request, destination);
-    response = client.getResponse();
+    request = new $.web.WebRequest($.net.http.GET, "/" + blogsType + "/");
+    connectionInformation.client.request(request, connectionInformation.destination);
+    response = connectionInformation.client.getResponse();
     bodies.push(response.body.asString());
     
     // loop for to get necessary number of blogs pages
@@ -103,8 +103,8 @@ function loadingCompanyBlogs (client, destination, numberOfPages, cleaner) {
         for (var i = 2; i <= numberOfPages; i++) {
             var path = '/company/page/' + i + '/';
             request = new $.web.WebRequest($.net.http.GET, path);
-            client.request(request, destination);
-            response = client.getResponse();
+            connectionInformation.client.request(request, connectionInformation.destination);
+            response = connectionInformation.client.getResponse();
            // client.close();
     
             bodies.push(response.body.asString());
@@ -112,101 +112,7 @@ function loadingCompanyBlogs (client, destination, numberOfPages, cleaner) {
     }
     
     var links = _getLinksFromBodies(bodies);
-    var blogs = _getBlogsByLinks(client, destination, links);
-    var slicedBlogs = _extractingBlogsContent(blogs);
-    
-    var commonTags = ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'em', 'code', 'li', 'ul', 'ol', 'br', 'b', 'td', 'tr', 'div', 'sup', 'de', 'po', 'i'];
-    var compositeTags = ['img', 'a', 'p', 'span', 'ol', 'h1', 'h2', 'h3', 'h4', 'div', 'td', 'de', 'po'];
-    var singleTags = ['br'];
-    
-    var clearedBlogs = [];
-    
-    for (var j = 0; j < slicedBlogs.length; j++) {
-        
-        clearedBlogs.push(cleaner.fullCleaning(commonTags, compositeTags, singleTags, slicedBlogs[j]));
-    }
-    
-    return clearedBlogs;
-}
-
-function loadingCodeBlogs (client, destination, numberOfPages, cleaner) {
-    
-    var bodies = [];
-    var request;
-    var response;
-    
-    if (numberOfPages < 1) {
-        return bodies;
-    }
-    
-    request = new $.web.WebRequest($.net.http.GET, "/code-for-a-living/");
-    client.request(request, destination);
-    response = client.getResponse();
-    bodies.push(response.body.asString());
-    
-    // loop for to get necessary number of blogs pages
-    // start from page 2
-    if (numberOfPages !== 1) {
-        for (var i = 2; i <= numberOfPages; i++) {
-            var path = '/company/page/' + i + '/';
-            request = new $.web.WebRequest($.net.http.GET, path);
-            client.request(request, destination);
-            response = client.getResponse();
-           // client.close();
-    
-            bodies.push(response.body.asString());
-        }
-    }
-    
-    var links = _getLinksFromBodies(bodies);
-    var blogs = _getBlogsByLinks(client, destination, links);
-    var slicedBlogs = _extractingBlogsContent(blogs);
-    
-    var commonTags = ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'em', 'code', 'li', 'ul', 'ol', 'br', 'b', 'td', 'tr', 'div', 'sup', 'de', 'po', 'i'];
-    var compositeTags = ['img', 'a', 'p', 'span', 'ol', 'h1', 'h2', 'h3', 'h4', 'div', 'td', 'de', 'po'];
-    var singleTags = ['br'];
-    
-    var clearedBlogs = [];
-    
-    for (var j = 0; j < slicedBlogs.length; j++) {
-        
-        clearedBlogs.push(cleaner.fullCleaning(commonTags, compositeTags, singleTags, slicedBlogs[j]));
-    }
-    
-    return clearedBlogs;
-}
-
-function loadingEngineeringBlogs (client, destination, numberOfPages, cleaner) {
-    
-    var bodies = [];
-    var request;
-    var response;
-    
-    if (numberOfPages < 1) {
-        return bodies;
-    }
-    
-    request = new $.web.WebRequest($.net.http.GET, "/engineering/");
-    client.request(request, destination);
-    response = client.getResponse();
-    bodies.push(response.body.asString());
-    
-    // loop for to get necessary number of blogs pages
-    // start from page 2
-    if (numberOfPages !== 1) {
-        for (var i = 2; i <= numberOfPages; i++) {
-            var path = '/company/page/' + i + '/';
-            request = new $.web.WebRequest($.net.http.GET, path);
-            client.request(request, destination);
-            response = client.getResponse();
-           // client.close();
-    
-            bodies.push(response.body.asString());
-        }
-    }
-    
-    var links = _getLinksFromBodies(bodies);
-    var blogs = _getBlogsByLinks(client, destination, links);
+    var blogs = _getBlogsByLinks(connectionInformation.client, connectionInformation.destination, links);
     var slicedBlogs = _extractingBlogsContent(blogs);
     
     var commonTags = ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'em', 'code', 'li', 'ul', 'ol', 'br', 'b', 'td', 'tr', 'div', 'sup', 'de', 'po', 'i'];
