@@ -197,7 +197,9 @@ switch (func) {
         
         var stackoverflowDest = $.net.http.readDestination(destinationPackage, stackoverflowDestName);
         
-        var blogs = stackoverflowLoader.loadingCompanyBlogs(client, stackoverflowDest, numberOfPages);
+        var companyBlogs = stackoverflowLoader.loadingCompanyBlogs(client, stackoverflowDest, numberOfPages, regexp);
+        var codeBlogs = stackoverflowLoader.loadingCodeBlogs(client, stackoverflowDest, numberOfPages, regexp);
+        var engineeringBlogs = stackoverflowLoader.loadingEngineeringBlogs(client, stackoverflowDest, numberOfPages, regexp);
         
         $.response.contentType = "application/json";
         $.response.setBody(JSON.stringify("Ok"));

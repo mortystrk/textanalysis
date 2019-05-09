@@ -1,10 +1,10 @@
 namespace textanalysis.content.src.artifacts.cds;
 @Schema: 'TA_SCHEMA'
 @Catalog.tableType: #COLUMN
-   Entity APPLE_NEWSROOM{
+   Entity STACKOVERFLOW_CODE {
        key ID: Integer64;
        CONTENT: LargeString;
-       CATEGORY: String(50);
+       AUTHOR: String(50);
        TITLE: String(250);
        LINK: String(250);
    }

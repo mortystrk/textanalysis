@@ -54,25 +54,32 @@ function fixSingleQuoteError (text) {
 function fullCleaning (commonTags, compositeTags, singleTags, text) {
     var clearedText = text;
     
-    for( var i = 0; i < commonTags.length; i++) {
+    try {
+        
+        for( var i = 0; i < commonTags.length; i++) {
         clearedText = clearTextFromCommonTag(commonTags[i], clearedText);
+        }
+        
+        for ( var j = 0; j < compositeTags.length; j++) {
+            clearedText = clearTextFromCompositeTag(compositeTags[j], clearedText);
+        }
+        
+        for ( var k = 0; k < singleTags.length; k++) {
+            clearedText = clearTextFromSingleTag(singleTags[k], clearedText);
+        }
+        
+        clearedText = clearTextFromSpecialChar(clearedText);
+        
+        clearedText = fixSingleQuoteError(clearedText);
+        
+        clearedText = clearedText.replace(/\s+/g, " ");
+        
+        return clearedText;
+        
+    } catch (e) {
+        
+        return e.message;
     }
-    
-    for ( var j = 0; j < compositeTags.length; j++) {
-        clearedText = clearTextFromCompositeTag(compositeTags[j], clearedText);
-    }
-    
-    for ( var k = 0; k < singleTags.length; k++) {
-        clearedText = clearTextFromSingleTag(singleTags[k], clearedText);
-    }
-    
-    clearedText = clearTextFromSpecialChar(clearedText);
-    
-    clearedText = fixSingleQuoteError(clearedText);
-    
-    clearedText = clearedText.replace(/\s+/g, " ");
-    
-    return clearedText;
 }
 
 
