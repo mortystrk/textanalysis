@@ -34,11 +34,17 @@ function _getLinksFromBodies (bodies) {
 function _extractingBlogsContent (blogs) {
     
     const tag = 'm-post-content">';
+    const searchTitle = /<title>(.*?)<\/title>/;
+    const searchAuthor = /<div class="m-author__name">(.*?)<\/div>/;
     var slicedBlogs = [];
     
     for (var i = 0; i < blogs.length; i++) {
         
         var tempStr = blogs[i];
+        
+        var title = tempStr.match(searchTitle);
+        var author = tempStr.match(searchAuthor);
+        
         var slicedStr;
         
         var startSlice, endSlice;
@@ -51,7 +57,9 @@ function _extractingBlogsContent (blogs) {
         endSlice = slicedStr.search("</div>");
         slicedStr = slicedStr.slice(0, endSlice);
         
-        slicedBlogs.push(slicedStr);
+        var blog = { content: slicedStr, title: title[1], author: author[1] };
+        
+        slicedBlogs.push(blog);
     }
     
     return slicedBlogs;
@@ -105,7 +113,6 @@ function loadingBlogs (connectionInformation, numberOfPages, cleaner, blogsType)
             request = new $.web.WebRequest($.net.http.GET, path);
             connectionInformation.client.request(request, connectionInformation.destination);
             response = connectionInformation.client.getResponse();
-           // client.close();
     
             bodies.push(response.body.asString());
         }
@@ -119,12 +126,16 @@ function loadingBlogs (connectionInformation, numberOfPages, cleaner, blogsType)
     var compositeTags = ['img', 'a', 'p', 'span', 'ol', 'h1', 'h2', 'h3', 'h4', 'div', 'td', 'de', 'po'];
     var singleTags = ['br'];
     
-    var clearedBlogs = [];
+    var stackoverflowBlogs = [];
     
     for (var j = 0; j < slicedBlogs.length; j++) {
         
-        clearedBlogs.push(cleaner.fullCleaning(commonTags, compositeTags, singleTags, slicedBlogs[j]));
+        slicedBlogs[j].content = cleaner.fullCleaning(commonTags, compositeTags, singleTags, slicedBlogs[j].content);
+        
+        var stackoverflowBlog = { content: slicedBlogs[j].content, title: slicedBlogs[j].title, author: slicedBlogs[j].author, link: links[j] };
+        
+        stackoverflowBlogs.push(stackoverflowBlog);
     }
     
-    return clearedBlogs;
+    return stackoverflowBlogs;
 }
