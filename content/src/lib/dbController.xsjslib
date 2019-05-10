@@ -18,6 +18,26 @@ DBController.prototype.insert = function (aBlogs) {
     }
 };
 
+DBController.prototype.insertStackoverflowBlogs = function (aBlogs, vTableName) {
+    
+    try {
+        
+        for (var i = 0; i < aBlogs.length; i++) {
+            
+            this.oConnection.executeUpdate('INSERT INTO "TA_SCHEMA"."' + vTableName + '"(ID, CONTENT, AUTHOR, TITLE, LINK) VALUES("TA_SCHEMA"."textanalysis.content.src.artifacts.sequences::auto_increment".NEXTVAL, ?, ?, ?, ?)', aBlogs[i].content, aBlogs[i].author, aBlogs[i].title, aBlogs[i].link);
+        
+        }
+        
+        this.oConnection.commit();
+        return 'Succesfully inserted';
+        
+    } catch (e) {
+        
+        return e.message;
+        
+    }
+};
+
 DBController.prototype.insertOnlinerPeople = function (aBlogs) {
     try {
         for (var i = 0; i < aBlogs.length; i++) {
@@ -32,13 +52,20 @@ DBController.prototype.insertOnlinerPeople = function (aBlogs) {
 
 DBController.prototype.insertAppleNews = function (aBlogs) {
     try {
+        
         for (var i = 0; i < aBlogs.length; i++) {
-            this.oConnection.executeUpdate('INSERT INTO "TA_SCHEMA"."textanalysis.content.src.artifacts.cds::APPLE_NEWSROOM"(ID, CONTENT, CATEGORY) VALUES("TA_SCHEMA"."textanalysis.content.src.artifacts.sequences::auto_increment".NEXTVAL, ?, ?)', aBlogs[i], 'test category');
+            
+            this.oConnection.executeUpdate('INSERT INTO "TA_SCHEMA"."textanalysis.content.src.artifacts.cds::APPLE_NEWSROOM"(ID, CONTENT, CATEGORY, TITLE, LINK) VALUES("TA_SCHEMA"."textanalysis.content.src.artifacts.sequences::auto_increment".NEXTVAL, ?, ?, ?, ?)', aBlogs[i].content, aBlogs[i].category, aBlogs[i].title, aBlogs[i].link);
+        
         }
+        
         this.oConnection.commit();
         return 'Succesfully inserted';
+        
     } catch (e) {
+        
         return e.message;
+        
     }
 };
     
