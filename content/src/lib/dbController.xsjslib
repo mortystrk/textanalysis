@@ -102,6 +102,44 @@ DBController.prototype.selectByColumnName = function () {
     }
 };
 
+DBController.prototype.selectTermArray = function (tmMatrixTable, numberOfTop, termsTypes) {
+    
+    var termsTypesConditions = '';
+    
+    for (var i = 0; i < termsTypes.length; i++) {
+        
+        if (i + 1 !== termsTypes.length) {
+            
+            termsTypesConditions += "TM_TERM_TYPE = \'" + termsTypes[i] + "\' OR ";
+            
+        } else {
+            
+            termsTypesConditions += "TM_TERM_TYPE = \'" + termsTypes[i] + "\' ";
+        }
+        
+    }
+    
+    var querySelectPart = 'SELECT TOP ' + numberOfTop + ' "TM_TERM" AS word, SUM("TM_TERM_FREQUENCY") AS weight FROM "TA_SCHEMA"."' + tmMatrixTable + '" WHERE ';
+    var queryGroupByPart = 'GROUP BY TM_TERM ORDER BY SUM("TM_TERM_FREQUENCY") DESC';
+    
+    var query = querySelectPart + termsTypesConditions + queryGroupByPart;
+    
+    try {
+        
+        var queryResult = this.oConnection.executeQuery(query);
+        var successfulMessage = { code: 0, result: queryResult };
+        
+        return successfulMessage;
+        
+    } catch (e) {
+        
+        var errorMessage = { code: -1, result: e.message };
+        
+        return errorMessage;
+        
+    }
+};
+
 DBController.prototype.selectLinkForUpperBlog = function (tableName) {
     
     try {

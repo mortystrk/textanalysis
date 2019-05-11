@@ -192,18 +192,62 @@ switch (func) {
         //var errorMessage = "Unsupported command";
         //var link = blogsUpdateController.updateBlogs(controller, dest, "SAP");
         
-        var stackoverflowDestName = "stackoverflow";
-        var numberOfPages = 1;
+        /*var stackoverflowDestName = "stackoverflow";
+        var numberOfPages = 2;
         
         var stackoverflowDest = $.net.http.readDestination(destinationPackage, stackoverflowDestName);
         
-        var companyBlogs = stackoverflowLoader.loadingCompanyBlogs(client, stackoverflowDest, numberOfPages, regexp);
-        var codeBlogs = stackoverflowLoader.loadingCodeBlogs(client, stackoverflowDest, numberOfPages, regexp);
-        var engineeringBlogs = stackoverflowLoader.loadingEngineeringBlogs(client, stackoverflowDest, numberOfPages, regexp);
+        var connectionInformation = {
+            client: client,
+            destination: stackoverflowDest
+        };
         
+        var companyBlogsType = "company";
+        var codeBlogsType = "code-for-a-living";
+        var engineeringBlogsType = "engineering";
+        
+        var companyTableName = "textanalysis.content.src.artifacts.cds::STACKOVERFLOW_COMPANY";
+        var codeTableName = "textanalysis.content.src.artifacts.cds::STACKOVERFLOW_CODE";
+        var engineeringTableName = "textanalysis.content.src.artifacts.cds::STACKOVERFLOW_ENGINEERING";
+        
+        var companyBlogs = stackoverflowLoader.loadingBlogs(connectionInformation, numberOfPages, regexp, companyBlogsType);
+        var codeBlogs = stackoverflowLoader.loadingBlogs(connectionInformation, numberOfPages, regexp, codeBlogsType);
+        var engineeringBlogs = stackoverflowLoader.loadingBlogs(connectionInformation, numberOfPages, regexp, engineeringBlogsType);
+        
+        var companyMessage = controller.insertStackoverflowBlogs(companyBlogs, companyTableName);
+        var codeMessage = controller.insertStackoverflowBlogs(codeBlogs, codeTableName);
+        var engineeringMessage = controller.insertStackoverflowBlogs(engineeringBlogs, engineeringTableName);
+        
+        var message = "company : " + companyMessage + "; code : " + codeMessage + "; engineering : " + engineeringMessage;
+     
         $.response.contentType = "application/json";
-        $.response.setBody(JSON.stringify("Ok"));
-        $.response.status = $.net.http.OK;
+        $.response.setBody(JSON.stringify(message));
+        $.response.status = $.net.http.OK;*/
+        var tmMatrixTable = "$TM_MATRIX_TM_APPLE_IDX";
+        var numberOfTop = 25;
+        var termsTypes = ['ORGANIZATION/COMMERCIAL', 'ORGANIZATION/EDUCATIONAL', 'PRODUCT'];
+        
+        var result = controller.selectTermArray(tmMatrixTable, numberOfTop, termsTypes);
+        
+        if (result.code === 0) {
+            
+            var valideJSON = prepareJSON(result.result);
+            
+            $.response.contentType = "application/json";
+            $.response.setBody(JSON.stringify(valideJSON));
+            $.response.status = $.net.http.OK;
+            
+        } else {
+            
+            $.response.contentType = "application/json";
+            $.response.setBody(JSON.stringify(result.result));
+            $.response.status = $.net.http.OK;
+            
+        }
+
+        /*$.response.contentType = "application/json";
+        $.response.setBody(JSON.stringify("ok"));
+        $.response.status = $.net.http.OK;*/
         
         break;
 }
