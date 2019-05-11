@@ -70,12 +70,18 @@ DBController.prototype.insertAppleNews = function (aBlogs) {
 };
     
 DBController.prototype.truncate = function (vTableName) {
+    
     try {
+        
         var query = 'TRUNCATE TABLE ' + vTableName;
         this.oConnection.executeUpdate(query);
-        return "Successfully truncated";
+        
+        return true;
+        
     } catch (e) {
-        return e.message;
+        
+        return false;
+        
     }
 };
 
