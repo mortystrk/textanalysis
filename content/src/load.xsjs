@@ -155,7 +155,7 @@ switch (blogType) {
     default :
     
         $.response.contentType = "application/json";
-        $.response.setBody(JSON.stringify("message"));
+        $.response.setBody(JSON.stringify("error parameter"));
         $.response.status = $.net.http.OK;
 }
 
