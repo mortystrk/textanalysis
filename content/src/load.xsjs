@@ -13,7 +13,6 @@ var client = new $.net.http.Client();
 var dbConnection = $.hdb.getConnection();
 var controller = new dbController.DBController(dbConnection);
 
-
 function _loadSapBlogs () {
     
     var destinationName = "blogs";
@@ -70,6 +69,24 @@ function _loadAppleNewsroom () {
     return message;
 }
 
+function _loadStackoverflowBlogs (type, tableName) {
+    
+    var stackoverflowDestName = "stackoverflow";
+    var numberOfPages = 4;
+        
+    var stackoverflowDest = $.net.http.readDestination(destinationPackage, stackoverflowDestName);
+        
+    var connectionInformation = {
+        client: client,
+        destination: stackoverflowDest
+    };
+    
+    var blogs = stackoverflowLoader.loadingBlogs(connectionInformation, numberOfPages, regexp, type);
+    
+    var message = controller.insertStackoverflowBlogs(blogs, tableName);
+    
+    return message;
+}
 
 var blogType = $.request.parameters.get('blogtype');
 var message = '';
@@ -89,6 +106,45 @@ switch (blogType) {
     case "APPLE" :
         
         message = _loadAppleNewsroom();
+        
+        $.response.contentType = "application/json";
+        $.response.setBody(JSON.stringify(message));
+        $.response.status = $.net.http.OK;
+        
+        break;
+        
+    case "STACKOVERFLOW" :
+        
+        var stackBlogType = $.request.parameters.get('stacktype');
+        var type;
+        var table;
+        
+        switch (stackBlogType) {
+            
+            case "COM" :
+                
+                type = "company";
+                table = "textanalysis.content.src.artifacts.cds::STACKOVERFLOW_COMPANY";
+                
+                break;
+                
+            case "CODE" :
+                
+                type = "code-for-a-living";
+                table = "textanalysis.content.src.artifacts.cds::STACKOVERFLOW_CODE";
+                
+                break;
+                
+            case "ENG" :
+                
+                type = "engineering";
+                table = "textanalysis.content.src.artifacts.cds::STACKOVERFLOW_ENGINEERING";
+                
+                break;
+                
+        }
+        
+        message = _loadStackoverflowBlogs(type, table);
         
         $.response.contentType = "application/json";
         $.response.setBody(JSON.stringify(message));
