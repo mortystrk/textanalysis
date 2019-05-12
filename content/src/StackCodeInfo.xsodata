@@ -1,0 +1,12 @@
+// To define an XS OData service, you can use the following syntax.
+// In the example below Aggregation, Modification and Association are defined.
+
+service  { 
+
+// Aggregation example: A view with ID Amount, Month, and Year columns created in textanalysis.content.src package.
+// Call http://host:port/package/file.xsodata/MyView?$select=Year,Amount
+
+   "textanalysis.content.src.artifacts.views::StackCode"             // Table or View  
+   as "StackCode"                             // Optional entity alias
+   key  ("LINK");                             // Optional key relevant for view
+}  

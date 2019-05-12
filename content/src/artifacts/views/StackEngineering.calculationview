@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="StackEngineering" applyPrivilegeType="ANALYTIC_PRIVILEGE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="2.3" defaultClient="$$client$$" visibility="internal" outputViewType="Projection" calculationScenarioType="TREE_BASED" enforceSqlExecution="false">
+<descriptions defaultDescription="Stack Company"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="$TM_MATRIX_TM_SOF_ENG_IDX" type="DATA_BASE_TABLE">
+    <viewAttributes allViewAttributes="true"/>
+    <columnObject schemaName="TA_SCHEMA" columnObjectName="$TM_MATRIX_TM_SOF_ENG_IDX"/>
+  </DataSource>
+  <DataSource id="textanalysis.content.src.artifacts.cds::STACKOVERFLOW_ENGINEERING" type="DATA_BASE_TABLE">
+    <viewAttributes allViewAttributes="true"/>
+    <columnObject schemaName="TA_SCHEMA" columnObjectName="textanalysis.content.src.artifacts.cds::STACKOVERFLOW_ENGINEERING"/>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+    <viewAttributes>
+      <viewAttribute id="ID"/>
+      <viewAttribute id="TM_TERM"/>
+      <viewAttribute id="TM_TERM_FREQUENCY"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="#$TM_MATRIX_TM_SOF_ENG_IDX">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ID" source="ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TM_TERM" source="TM_TERM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TM_TERM_FREQUENCY" source="TM_TERM_FREQUENCY"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="AUTHOR"/>
+      <viewAttribute id="ID"/>
+      <viewAttribute id="LINK"/>
+      <viewAttribute id="TITLE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="#textanalysis.content.src.artifacts.cds::STACKOVERFLOW_ENGINEERING">
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUTHOR" source="AUTHOR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ID" source="ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LINK" source="LINK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TITLE" source="TITLE"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="inner" cardinality="CN_1">
+    <viewAttributes>
+      <viewAttribute id="TM_TERM"/>
+      <viewAttribute id="TM_TERM_FREQUENCY"/>
+      <viewAttribute id="AUTHOR"/>
+      <viewAttribute id="LINK"/>
+      <viewAttribute id="TITLE"/>
+      <viewAttribute id="JOIN$ID$ID" hidden="true"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="#Aggregation_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TM_TERM" source="TM_TERM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TM_TERM_FREQUENCY" source="TM_TERM_FREQUENCY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ID$ID" source="ID"/>
+    </input>
+    <input node="#Projection_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUTHOR" source="AUTHOR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LINK" source="LINK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TITLE" source="TITLE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ID$ID" source="ID"/>
+    </input>
+    <joinAttribute name="JOIN$ID$ID"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Join_1">
+  <attributes>
+    <attribute id="TM_TERM" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TM_TERM"/>
+      <keyMapping columnObjectName="Join_1" columnName="TM_TERM"/>
+    </attribute>
+    <attribute id="TM_TERM_FREQUENCY" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TM_TERM_FREQUENCY"/>
+      <keyMapping columnObjectName="Join_1" columnName="TM_TERM_FREQUENCY"/>
+    </attribute>
+    <attribute id="AUTHOR" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="AUTHOR"/>
+      <keyMapping columnObjectName="Join_1" columnName="AUTHOR"/>
+    </attribute>
+    <attribute id="LINK" key="true" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LINK"/>
+      <keyMapping columnObjectName="Join_1" columnName="LINK"/>
+    </attribute>
+    <attribute id="TITLE" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TITLE"/>
+      <keyMapping columnObjectName="Join_1" columnName="TITLE"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="24" y="307"/>
+      <rectangleSize height="30" width="140"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="231" y="320"/>
+      <rectangleSize height="30" width="140"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="130" y="225"/>
+      <rectangleSize height="30" width="140"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

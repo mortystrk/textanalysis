@@ -52,7 +52,7 @@ function _loadSapBlogs () {
         
         controller.insert(clearedBlogsWithInfo);
         
-        return "Data was inserted";
+        return "Succesfully inserted";
 
     } catch (e) {
         
