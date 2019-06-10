@@ -37,12 +37,12 @@
     </input>
     <joinAttribute name="JOIN$ID$ID"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1" filterExpressionLanguage="COLUMN_ENGINE">
     <viewAttributes>
-      <viewAttribute id="ID"/>
       <viewAttribute id="TM_TERM"/>
       <viewAttribute id="TM_TERM_FREQUENCY"/>
-    </viewAttributes>
+    
+      <viewAttribute id="ID"/></viewAttributes>
     <calculatedViewAttributes/>
     <input node="#$TM_MATRIX_TM_APPLE_IDX">
       <mapping xsi:type="Calculation:AttributeMapping" target="ID" source="ID"/>
@@ -52,11 +52,11 @@
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
     <viewAttributes>
-      <viewAttribute id="ID"/>
       <viewAttribute id="LINK"/>
       <viewAttribute id="TITLE"/>
       <viewAttribute id="CATEGORY"/>
-    </viewAttributes>
+    
+      <viewAttribute id="ID"/></viewAttributes>
     <calculatedViewAttributes/>
     <input node="#textanalysis.content.src.artifacts.cds::APPLE_NEWSROOM">
       <mapping xsi:type="Calculation:AttributeMapping" target="ID" source="ID"/>

@@ -1,0 +1,8 @@
+namespace textanalysis.content.src.artifacts.cds;
+@Schema: 'TA_SCHEMA'
+@Catalog.tableType: #COLUMN
+   Entity STATISTICS {
+       TERM : String(50);
+       NUMBER: Integer;
+       BLOG: String(50);
+   }
